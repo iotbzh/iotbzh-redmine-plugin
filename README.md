@@ -24,3 +24,12 @@ systemctl restart httpd/apache2/nginx
 
 * Plugin is available from top banner : EasyTT
 
+## Specific for wiki
+
+* The plugin had a wiki shortcut in topbar.
+* If you want to edit or delete the link, edit  **init.rb** file and change 
+
+```
+menu :top_menu, :wiki, { :controller => 'wiki', :action =>  'index', :project_id => 'iot-team'  }, :caption => 'WIKI'
+```
+
