@@ -43,11 +43,53 @@ class EasyttController < ApplicationController
 
   ### Responce to route '/easytt/create'
   def create
-    @time_entry ||= TimeEntry.new(:project => @project, :issue => @issue, :user => User.current, :spent_on => User.current.today)
+    @time_entry = TimeEntry.new(:project => @project, :issue => @issue, :user => User.current, :spent_on => User.current.today)
     @time_entry.safe_attributes = params[:time_entry]
     @time_entry.save
     if (@time_entry.save)
       flash[:notice] = l(:notice_successful_create)
+    else
+      flash[:error] = l(:notice_unable_create_time_entry)
+    end
+    redirect_to "/easytt/index/"+params[:userid]+"/"+params[:viewtype]+"/"+params[:refdate]
+  end
+
+  ### Responce to route '/easytt/multiple_create'
+  def multiple_create
+    selec = params[:select_repetition].to_s
+    d2 = Date.parse(params[:time_entry][:spent_on])
+    d1 = Date.parse(params[:date_end])
+    if (params[:date_end] != nil)
+      if ((d2 <= d1 + 30.day && selec == "daily") || ( (d2.month <= d1.month + 3) && selec == "weekly") || ( (d2.month <= d1.month + 3) && selec == "biweekly"))
+        while d2 <= d1  do
+          puts d2
+          if(!d2.on_weekend?)
+            @time_entry = TimeEntry.new(:project => @project, :issue => @issue, :user => User.current, :spent_on => User.current.today)
+            @time_entry.safe_attributes = params[:time_entry]
+            @time_entry.spent_on = d2
+            @time_entry.save
+            if (@time_entry.save)
+              flash[:notice] = l(:notice_successful_create)
+            else
+              flash[:error] = l(:notice_unable_create_time_entry)
+              break
+            end
+          end
+          if (selec == "daily")
+            d2 = d2.next_day()
+          else
+            if(selec == "weekly")
+              d2 = d2.next_week()
+            else
+              if(selec == "biweekly")
+                d2 = d2 + 2.week
+              end
+            end
+          end  
+        end
+      else
+        flash[:error] = l(:notice_unable_create_time_entry)
+      end
     else
       flash[:error] = l(:notice_unable_create_time_entry)
     end
@@ -71,9 +113,7 @@ class EasyttController < ApplicationController
 
   def update
     @time_entry.safe_attributes = params[:time_entry]
-
     call_hook(:controller_timelog_edit_before_save, { :params => params, :time_entry => @time_entry })
-
     if @time_entry.save
       respond_to do |format|
         format.html {
