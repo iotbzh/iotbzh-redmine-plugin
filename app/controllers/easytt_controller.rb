@@ -43,6 +43,7 @@ class EasyttController < ApplicationController
 
   ### Responce to route '/easytt/create'
   def create
+    puts 5
     @time_entry = TimeEntry.new(:project => @project, :issue => @issue, :user => User.current, :spent_on => User.current.today)
     @time_entry.safe_attributes = params[:time_entry]
     @time_entry.save
@@ -78,7 +79,7 @@ class EasyttController < ApplicationController
             d2 = d2.next_day()
           else
             if(selec == "weekly")
-              d2 = d2.next_week()
+              d2 = d2 + 1.week
             else
               if(selec == "biweekly")
                 d2 = d2 + 2.week

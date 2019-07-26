@@ -48,6 +48,16 @@ function multiple_create(){
   document.getElementById("multiple-specific").style.display = "block";
 }
 
+function duplicate()
+{
+  var action = $("#new_time_entry").attr("action");
+  action = action.split('/')
+  action[2] = "create";
+  $("#new_time_entry").attr("action", action.join('/'));
+  document.getElementById("new_time_entry").submit();
+}
+
+
 function calc()
 {
   if ($('#choice').is(':checked') == true ) 
@@ -59,14 +69,6 @@ function calc()
     document.getElementsByClassName("typeForm")[0].innerHTML = "Creation";
     $("#new_time_entry").attr("action", action.replace("easytt/multiple_create/", "easytt/create/"));
   }
-}
-
-function duplicate()
-{
-  var action = $("#new_time_entry").attr("action");
-  $("#new_time_entry").attr("action", action.replace("easytt/edit/", "easytt/create/"));
-  $("#new_time_entry").attr("action", action.replace("easytt/multiple_create/", "easytt/create/"));
-  getElementById("new_time_entry").submit();
 }
 
 function edit(entry) {
