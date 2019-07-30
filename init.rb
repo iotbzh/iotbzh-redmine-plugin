@@ -7,6 +7,5 @@ Redmine::Plugin.register :iotbzh do
   author_url 'https://iot.bzh/en/team/portfolio/collignon-loic'
 
   menu :top_menu, :easytt, { :controller => 'easytt' }, :caption => 'EasyTT', :if => Proc.new{ User.current.logged?}
-  menu :top_menu, :wiki, { :controller => 'wiki', :action =>  'index', :project_id => 'iot-team'  }, :caption => 'WIKI'
 
 end
