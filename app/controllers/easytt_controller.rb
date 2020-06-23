@@ -43,10 +43,8 @@ class EasyttController < ApplicationController
 
   ### Responce to route '/easytt/create'
   def create
-    puts 5
     @time_entry = TimeEntry.new(:project => @project, :issue => @issue, :user => User.current, :spent_on => User.current.today)
     @time_entry.safe_attributes = params[:time_entry]
-    @time_entry.save
     if (@time_entry.save)
       flash[:notice] = l(:notice_successful_create)
     else
@@ -67,7 +65,6 @@ class EasyttController < ApplicationController
             @time_entry = TimeEntry.new(:project => @project, :issue => @issue, :user => User.current, :spent_on => User.current.today)
             @time_entry.safe_attributes = params[:time_entry]
             @time_entry.spent_on = d2
-            @time_entry.save
             if (@time_entry.save)
               flash[:notice] = l(:notice_successful_create)
             else
